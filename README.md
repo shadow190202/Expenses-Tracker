@@ -1,20 +1,4 @@
-✅ Table of Contents
-✅ Shields (badges)
-✅ Tech stack
-✅ Screenshots (placeholders you can replace)
-✅ Installation + Setup
-✅ Database + Clerk setup
-✅ Usage guide
-✅ Folder structure
-✅ Features list
-✅ Deployment steps
-✅ License + Contribution guide
 
----
-
-# 🎉 **Complete README.md (Copy & Paste into your repo)**
-
-````markdown
 <div align="center">
 
 # 💰 Expenses Tracker  
@@ -38,7 +22,6 @@ A modern, full-stack personal budgeting & expense management app built with **Ne
 ---
 
 # 📘 Table of Contents
-- [📸 Screenshots](#-screenshots)
 - [🚀 Features](#-features)
 - [🧪 Tech Stack](#-tech-stack)
 - [📦 Installation](#-installation)
@@ -50,21 +33,6 @@ A modern, full-stack personal budgeting & expense management app built with **Ne
 - [🚀 Deployment](#-deployment)
 - [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
-
----
-
-# 📸 Screenshots
-
-> Replace these with your own screenshots later.
-
-### **Dashboard**
-![Dashboard Screenshot](https://via.placeholder.com/1000x450?text=Dashboard+Screenshot)
-
-### **Expenses List**
-![Expenses Screenshot](https://via.placeholder.com/1000x450?text=Expenses+List)
-
-### **Budgets**
-![Budget Screenshot](https://via.placeholder.com/1000x450?text=Budget+List)
 
 ---
 
