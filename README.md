@@ -237,10 +237,3 @@ Open a Pull Request 🚀
 # 📄 License
 
 This project is licensed under the **MIT License** — free to use and modify.
-
-✅ Add a **GIF demo**?  
-✅ Add **installation troubleshooting**?  
-✅ Add **live demo link** section for Vercel?  
-
-Just tell me!
-```
