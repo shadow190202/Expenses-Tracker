@@ -14,11 +14,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createBudget } from "@/actions/budgets";
 import { toast } from "sonner";
-import { Loader } from "lucide-react";
+import { Loader, Sparkles } from "lucide-react";
 
 function CreateBudget({ refreshData, children }) {
   const [open, setOpen] = useState(false);
-  const [emojiIcon, setEmojiIcon] = useState("😀");
+  const [emojiIcon, setEmojiIcon] = useState("📊");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
@@ -39,7 +39,7 @@ function CreateBudget({ refreshData, children }) {
       await createBudget({
         name,
         amount,
-        icon: emojiIcon,
+        icon: emojiIcon || null,
       });
 
       toast.success("Budget Created Successfully!");
@@ -60,9 +60,9 @@ function CreateBudget({ refreshData, children }) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {children || (
-            <div className="bg-slate-100 p-10 rounded-md items-center flex flex-col border-2 border-dashed cursor-pointer hover:shadow-md">
-              <h2 className="text-3xl">+</h2>
-              <h2>Create New Budget</h2>
+            <div className="bg-slate-50 hover:bg-slate-100/80 p-10 rounded-xl items-center flex flex-col border-2 border-dashed border-slate-300 cursor-pointer hover:shadow-xs transition-all h-[170px] justify-center">
+              <h2 className="text-3xl font-light text-slate-400">+</h2>
+              <h2 className="text-sm font-medium text-slate-600 mt-1">Create New Budget</h2>
             </div>
           )}
         </DialogTrigger>
@@ -73,10 +73,10 @@ function CreateBudget({ refreshData, children }) {
               <div className="mt-5">
                 <Button
                   variant="outline"
-                  className="text-lg"
+                  className="text-lg rounded-lg"
                   onClick={() => setOpenEmojiPicker(!openEmojiPicker)}
                 >
-                  {emojiIcon}
+                  {emojiIcon || <Sparkles className="h-5 w-5 text-slate-500" />}
                 </Button>
                 <div className="absolute z-20">
                   <EmojiPicker
@@ -90,9 +90,10 @@ function CreateBudget({ refreshData, children }) {
                 <div className="mt-2">
                   <h2 className="text-black font-medium my-1">Budget Name</h2>
                   <Input
-                    placeholder="e.g Home Rent"
+                    placeholder="e.g. Housing & Rent"
                     required
                     maxLength={100}
+                    className="rounded-lg"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -100,10 +101,11 @@ function CreateBudget({ refreshData, children }) {
                 <div className="mt-2">
                   <h2 className="text-black font-medium my-1">Budget Amount</h2>
                   <Input
-                    placeholder="e.g 5000"
+                    placeholder="e.g. 5000"
                     type="number"
                     min="0.01"
                     step="0.01"
+                    className="rounded-lg"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                   />
@@ -115,7 +117,7 @@ function CreateBudget({ refreshData, children }) {
             <Button
               disabled={!name?.trim() || !amount || Number(amount) <= 0 || loading}
               onClick={onCreateBudget}
-              className="mt-5 w-full flex items-center justify-center gap-2"
+              className="mt-5 w-full flex items-center justify-center gap-2 rounded-lg"
             >
               {loading ? <Loader className="animate-spin h-4 w-4" /> : "Create Budget"}
             </Button>

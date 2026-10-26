@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { PiggyBank } from "lucide-react";
 import { formatCurrency } from "@/lib/formatters";
 
 function BudgetItem({ budget }) {
@@ -16,11 +17,15 @@ function BudgetItem({ budget }) {
 
   return (
     <Link href={`/dashboard/expenses/${budget?.id}`}>
-      <div className="p-5 border rounded-lg h-[170px] hover:shadow-md cursor-pointer transition-shadow bg-white flex flex-col justify-between">
+      <div className="p-5 border border-slate-200/80 rounded-xl h-[170px] hover:shadow-md cursor-pointer transition-shadow bg-white flex flex-col justify-between">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="text-2xl p-3 bg-slate-100 rounded-full flex-shrink-0">
-              {budget?.icon || "💰"}
+            <div className="p-3 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0 h-12 w-12">
+              {budget?.icon ? (
+                <span className="text-xl leading-none">{budget.icon}</span>
+              ) : (
+                <PiggyBank className="h-6 w-6 text-indigo-600" />
+              )}
             </div>
             <div className="min-w-0">
               <h2

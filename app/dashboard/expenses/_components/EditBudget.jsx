@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { PenBox, Loader } from "lucide-react";
+import { PenBox, Loader, Sparkles } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ import { updateBudget } from "@/actions/budgets";
 
 function EditBudget({ budgetInfo, refreshData }) {
   const [open, setOpen] = useState(false);
-  const [emojiIcon, setEmojiIcon] = useState(budgetInfo?.icon || "😀");
+  const [emojiIcon, setEmojiIcon] = useState(budgetInfo?.icon || "");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
   const [name, setName] = useState(budgetInfo?.name || "");
   const [amount, setAmount] = useState(budgetInfo?.amount || "");
@@ -26,7 +26,7 @@ function EditBudget({ budgetInfo, refreshData }) {
 
   useEffect(() => {
     if (budgetInfo) {
-      setEmojiIcon(budgetInfo?.icon || "😀");
+      setEmojiIcon(budgetInfo?.icon || "");
       setName(budgetInfo?.name || "");
       setAmount(budgetInfo?.amount || "");
     }
@@ -48,7 +48,7 @@ function EditBudget({ budgetInfo, refreshData }) {
         id: budgetInfo.id,
         name,
         amount,
-        icon: emojiIcon,
+        icon: emojiIcon || null,
       });
 
       toast.success("Budget updated successfully!");
@@ -66,7 +66,7 @@ function EditBudget({ budgetInfo, refreshData }) {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button className="flex gap-2">
+          <Button variant="outline" className="flex gap-2 rounded-lg">
             <PenBox className="h-4 w-4" />
             Edit
           </Button>
@@ -78,10 +78,10 @@ function EditBudget({ budgetInfo, refreshData }) {
               <div className="mt-5">
                 <Button
                   variant="outline"
-                  className="text-lg"
+                  className="text-lg rounded-lg"
                   onClick={() => setOpenEmojiPicker(!openEmojiPicker)}
                 >
-                  {emojiIcon}
+                  {emojiIcon || <Sparkles className="h-5 w-5 text-slate-500" />}
                 </Button>
                 <div className="absolute z-20">
                   <EmojiPicker
@@ -95,9 +95,10 @@ function EditBudget({ budgetInfo, refreshData }) {
                 <div className="mt-2">
                   <h2 className="text-black font-medium my-1">Budget Name</h2>
                   <Input
-                    placeholder="e.g Home Rent"
+                    placeholder="e.g. Housing & Rent"
                     required
                     maxLength={100}
+                    className="rounded-lg"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -105,10 +106,11 @@ function EditBudget({ budgetInfo, refreshData }) {
                 <div className="mt-2">
                   <h2 className="text-black font-medium my-1">Budget Amount</h2>
                   <Input
-                    placeholder="e.g 5000"
+                    placeholder="e.g. 5000"
                     type="number"
                     min="0.01"
                     step="0.01"
+                    className="rounded-lg"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                   />
@@ -120,7 +122,7 @@ function EditBudget({ budgetInfo, refreshData }) {
             <Button
               disabled={!name?.trim() || !amount || Number(amount) <= 0 || loading}
               onClick={onUpdateBudget}
-              className="mt-5 w-full flex items-center justify-center gap-2"
+              className="mt-5 w-full flex items-center justify-center gap-2 rounded-lg"
             >
               {loading ? <Loader className="animate-spin h-4 w-4" /> : "Update Budget"}
             </Button>

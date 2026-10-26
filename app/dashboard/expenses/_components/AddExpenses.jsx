@@ -11,9 +11,6 @@ function AddExpenses({ budgetId, refreshData }) {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
 
-  /**
-   * Used to Add New Expenses
-   */
   const addNewExpenses = async () => {
     if (!name?.trim() || name.trim().length < 2) {
       toast.error("Expense name must be at least 2 characters long");
@@ -45,25 +42,27 @@ function AddExpenses({ budgetId, refreshData }) {
   };
 
   return (
-    <div className="border p-5 rounded-lg">
-      <h2 className="font-bold text-lg">Add Expenses</h2>
+    <div className="border border-slate-200/80 p-5 rounded-xl bg-white shadow-xs">
+      <h2 className="font-bold text-lg text-slate-900">Add Expense</h2>
       <div className="mt-2">
-        <h2 className="text-black font-medium my-1">Expenses Name</h2>
+        <h2 className="text-slate-700 font-medium my-1 text-sm">Expense Name</h2>
         <Input
-          placeholder="e.g Grocery"
+          placeholder="e.g. Office Supplies"
           required
           maxLength={100}
+          className="rounded-lg"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
       </div>
       <div className="mt-2">
-        <h2 className="text-black font-medium my-1">Expenses Amount</h2>
+        <h2 className="text-slate-700 font-medium my-1 text-sm">Expense Amount</h2>
         <Input
           type="number"
           min="0.01"
           step="0.01"
-          placeholder="e.g 1000"
+          placeholder="e.g. 150"
+          className="rounded-lg"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
@@ -71,9 +70,9 @@ function AddExpenses({ budgetId, refreshData }) {
       <Button
         disabled={!name?.trim() || !amount || Number(amount) <= 0 || loading}
         onClick={addNewExpenses}
-        className="mt-3 w-full flex items-center justify-center gap-2"
+        className="mt-4 w-full flex items-center justify-center gap-2 rounded-lg"
       >
-        {loading ? <Loader className="animate-spin h-4 w-4" /> : "Add New Expense"}
+        {loading ? <Loader className="animate-spin h-4 w-4" /> : "Add Expense"}
       </Button>
     </div>
   );

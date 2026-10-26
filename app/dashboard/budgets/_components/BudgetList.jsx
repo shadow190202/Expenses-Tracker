@@ -39,27 +39,27 @@ function BudgetList() {
           {[1, 2, 3, 4, 5, 6].map((item, index) => (
             <div
               key={index}
-              className="w-full bg-slate-200 rounded-lg h-[170px] animate-pulse"
+              className="w-full bg-slate-200 rounded-xl h-[170px] animate-pulse"
             ></div>
           ))}
         </div>
       ) : budgetList.length === 0 ? (
-        <div className="border-2 border-dashed border-slate-200 rounded-2xl p-12 text-center bg-slate-50/60 flex flex-col items-center justify-center max-w-xl mx-auto space-y-4 my-8">
-          <div className="p-4 bg-primary/10 rounded-full text-primary">
-            <PiggyBank className="h-12 w-12" />
+        <div className="border-2 border-dashed border-slate-200 rounded-xl p-12 text-center bg-slate-50/60 flex flex-col items-center justify-center max-w-xl mx-auto space-y-4 my-8">
+          <div className="p-4 bg-indigo-50 text-indigo-600 rounded-xl">
+            <PiggyBank className="h-10 w-10" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-bold text-2xl text-gray-800">
+            <h3 className="font-bold text-xl text-slate-800">
               No budgets created yet
             </h3>
-            <p className="text-sm text-gray-500 max-w-md mx-auto">
+            <p className="text-sm text-slate-500 max-w-md mx-auto">
               Create your first budget to organize your spending, track progress,
               and take control of your financial goals.
             </p>
           </div>
           <CreateBudget refreshData={loadBudgets}>
-            <Button className="mt-2 flex items-center gap-2 px-6 py-5 text-base shadow-sm">
-              <PlusCircle className="h-5 w-5" />
+            <Button className="mt-2 flex items-center gap-2 px-5 py-2.5 text-sm rounded-lg shadow-xs">
+              <PlusCircle className="h-4 w-4" />
               Create Your First Budget
             </Button>
           </CreateBudget>
