@@ -17,7 +17,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Trash } from "lucide-react";
+import { Trash, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { getBudgetById, deleteBudget as deleteBudgetAction } from "@/actions/budgets";
@@ -27,6 +27,7 @@ function ExpensesScreen({ id }) {
   const { user } = useUser();
   const [budgetInfo, setbudgetInfo] = useState();
   const [expensesList, setExpensesList] = useState([]);
+  const [isDeleting, setIsDeleting] = useState(false);
   const route = useRouter();
 
   useEffect(() => {
@@ -64,12 +65,14 @@ function ExpensesScreen({ id }) {
 
   const handleDeleteBudget = async () => {
     try {
+      setIsDeleting(true);
       await deleteBudgetAction(id);
       toast.success("Budget Deleted!");
       route.replace("/dashboard/budgets");
     } catch (error) {
       console.error("Failed to delete budget:", error);
       toast.error(error.message || "Failed to delete budget");
+      setIsDeleting(false);
     }
   };
 
@@ -89,7 +92,7 @@ function ExpensesScreen({ id }) {
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button className="flex gap-2" variant="destructive">
-                <Trash />
+                <Trash className="h-4 w-4" />
                 Delete
               </Button>
             </AlertDialogTrigger>
@@ -98,14 +101,21 @@ function ExpensesScreen({ id }) {
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently delete
-                  your current budget along with expenses and remove your data
-                  from server.
+                  &quot;{budgetInfo?.name || "this budget"}&quot; along with all of its associated expenses.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => handleDeleteBudget()}>
-                  Continue
+                <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  disabled={isDeleting}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleDeleteBudget();
+                  }}
+                  className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
+                >
+                  {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                  {isDeleting ? "Deleting..." : "Delete Budget"}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -120,7 +130,6 @@ function ExpensesScreen({ id }) {
         )}
         <AddExpenses
           budgetId={id}
-          user={user}
           refreshData={() => getBudgetInfo()}
         />
       </div>

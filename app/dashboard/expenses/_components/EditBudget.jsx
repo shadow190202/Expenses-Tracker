@@ -33,6 +33,15 @@ function EditBudget({ budgetInfo, refreshData }) {
   }, [budgetInfo]);
 
   const onUpdateBudget = async () => {
+    if (!name?.trim() || name.trim().length < 2) {
+      toast.error("Budget name must be at least 2 characters long");
+      return;
+    }
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+      toast.error("Please enter a valid amount greater than 0");
+      return;
+    }
+
     try {
       setLoading(true);
       await updateBudget({
@@ -58,7 +67,7 @@ function EditBudget({ budgetInfo, refreshData }) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button className="flex gap-2">
-            <PenBox />
+            <PenBox className="h-4 w-4" />
             Edit
           </Button>
         </DialogTrigger>
@@ -87,6 +96,8 @@ function EditBudget({ budgetInfo, refreshData }) {
                   <h2 className="text-black font-medium my-1">Budget Name</h2>
                   <Input
                     placeholder="e.g Home Rent"
+                    required
+                    maxLength={100}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -94,9 +105,10 @@ function EditBudget({ budgetInfo, refreshData }) {
                 <div className="mt-2">
                   <h2 className="text-black font-medium my-1">Budget Amount</h2>
                   <Input
-                    placeholder="e.g $5000"
+                    placeholder="e.g 5000"
                     type="number"
-                    min="1"
+                    min="0.01"
+                    step="0.01"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                   />
@@ -106,11 +118,11 @@ function EditBudget({ budgetInfo, refreshData }) {
           </DialogHeader>
           <DialogFooter className="sm:justify-start">
             <Button
-              disabled={!(name?.trim() && amount) || loading}
+              disabled={!name?.trim() || !amount || Number(amount) <= 0 || loading}
               onClick={onUpdateBudget}
-              className="mt-5 w-full"
+              className="mt-5 w-full flex items-center justify-center gap-2"
             >
-              {loading ? <Loader className="animate-spin" /> : "Update Budget"}
+              {loading ? <Loader className="animate-spin h-4 w-4" /> : "Update Budget"}
             </Button>
           </DialogFooter>
         </DialogContent>

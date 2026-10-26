@@ -33,7 +33,7 @@ export async function getBudgetById(id) {
   const { email } = await getAuthenticatedUser();
   const numericId = Number(id);
 
-  if (!numericId || isNaN(numericId)) {
+  if (!numericId || isNaN(numericId) || numericId <= 0) {
     throw new Error('Invalid budget ID');
   }
 
@@ -52,7 +52,7 @@ export async function getBudgetById(id) {
 }
 
 /**
- * Create a new budget owned by the authenticated user.
+ * Create a new budget owned by the authenticated user with defensive input validation.
  */
 export async function createBudget({ name, amount, icon }) {
   const { email } = await getAuthenticatedUser();
@@ -60,11 +60,14 @@ export async function createBudget({ name, amount, icon }) {
   const trimmedName = typeof name === 'string' ? name.trim() : '';
   const parsedAmount = Number(amount);
 
-  if (!trimmedName) {
-    throw new Error('Budget name is required');
+  if (!trimmedName || trimmedName.length < 2) {
+    throw new Error('Budget name must be at least 2 characters long');
+  }
+  if (trimmedName.length > 100) {
+    throw new Error('Budget name cannot exceed 100 characters');
   }
   if (isNaN(parsedAmount) || parsedAmount <= 0) {
-    throw new Error('Budget amount must be a positive number');
+    throw new Error('Budget amount must be a valid number greater than 0');
   }
 
   const result = await db
@@ -81,24 +84,27 @@ export async function createBudget({ name, amount, icon }) {
 }
 
 /**
- * Update an existing budget, strictly verifying ownership.
+ * Update an existing budget, strictly verifying ownership and validating inputs.
  */
 export async function updateBudget({ id, name, amount, icon }) {
   const { email } = await getAuthenticatedUser();
   const numericId = Number(id);
 
-  if (!numericId || isNaN(numericId)) {
+  if (!numericId || isNaN(numericId) || numericId <= 0) {
     throw new Error('Invalid budget ID');
   }
 
   const trimmedName = typeof name === 'string' ? name.trim() : '';
   const parsedAmount = Number(amount);
 
-  if (!trimmedName) {
-    throw new Error('Budget name is required');
+  if (!trimmedName || trimmedName.length < 2) {
+    throw new Error('Budget name must be at least 2 characters long');
+  }
+  if (trimmedName.length > 100) {
+    throw new Error('Budget name cannot exceed 100 characters');
   }
   if (isNaN(parsedAmount) || parsedAmount <= 0) {
-    throw new Error('Budget amount must be a positive number');
+    throw new Error('Budget amount must be a valid number greater than 0');
   }
 
   const result = await db
@@ -125,7 +131,7 @@ export async function deleteBudget(id) {
   const { email } = await getAuthenticatedUser();
   const numericId = Number(id);
 
-  if (!numericId || isNaN(numericId)) {
+  if (!numericId || isNaN(numericId) || numericId <= 0) {
     throw new Error('Invalid budget ID');
   }
 

@@ -15,6 +15,15 @@ function AddExpenses({ budgetId, refreshData }) {
    * Used to Add New Expenses
    */
   const addNewExpenses = async () => {
+    if (!name?.trim() || name.trim().length < 2) {
+      toast.error("Expense name must be at least 2 characters long");
+      return;
+    }
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+      toast.error("Please enter a valid amount greater than 0");
+      return;
+    }
+
     try {
       setLoading(true);
       await addExpense({
@@ -42,6 +51,8 @@ function AddExpenses({ budgetId, refreshData }) {
         <h2 className="text-black font-medium my-1">Expenses Name</h2>
         <Input
           placeholder="e.g Grocery"
+          required
+          maxLength={100}
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
@@ -51,18 +62,18 @@ function AddExpenses({ budgetId, refreshData }) {
         <Input
           type="number"
           min="0.01"
-          step="any"
+          step="0.01"
           placeholder="e.g 1000"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
       </div>
       <Button
-        disabled={!(name?.trim() && amount) || loading}
+        disabled={!name?.trim() || !amount || Number(amount) <= 0 || loading}
         onClick={addNewExpenses}
-        className="mt-3 w-full"
+        className="mt-3 w-full flex items-center justify-center gap-2"
       >
-        {loading ? <Loader className="animate-spin" /> : "Add New Expenses"}
+        {loading ? <Loader className="animate-spin h-4 w-4" /> : "Add New Expense"}
       </Button>
     </div>
   );

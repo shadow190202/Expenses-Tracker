@@ -29,7 +29,7 @@ export async function getExpensesByBudgetId(budgetId) {
   const { email } = await getAuthenticatedUser();
   const numericBudgetId = Number(budgetId);
 
-  if (!numericBudgetId || isNaN(numericBudgetId)) {
+  if (!numericBudgetId || isNaN(numericBudgetId) || numericBudgetId <= 0) {
     throw new Error('Invalid budget ID');
   }
 
@@ -75,7 +75,7 @@ export async function getAllExpenses() {
 }
 
 /**
- * Add an expense to a budget, strictly verifying that the budget belongs to the user.
+ * Add an expense to a budget, strictly verifying that the budget belongs to the user with defensive validation.
  */
 export async function addExpense({ name, amount, budgetId }) {
   const { email } = await getAuthenticatedUser();
@@ -83,14 +83,17 @@ export async function addExpense({ name, amount, budgetId }) {
   const trimmedName = typeof name === 'string' ? name.trim() : '';
   const parsedAmount = Number(amount);
 
-  if (!numericBudgetId || isNaN(numericBudgetId)) {
+  if (!numericBudgetId || isNaN(numericBudgetId) || numericBudgetId <= 0) {
     throw new Error('Invalid budget ID');
   }
-  if (!trimmedName) {
-    throw new Error('Expense name is required');
+  if (!trimmedName || trimmedName.length < 2) {
+    throw new Error('Expense name must be at least 2 characters long');
+  }
+  if (trimmedName.length > 100) {
+    throw new Error('Expense name cannot exceed 100 characters');
   }
   if (isNaN(parsedAmount) || parsedAmount <= 0) {
-    throw new Error('Expense amount must be a positive number');
+    throw new Error('Expense amount must be a valid number greater than 0');
   }
 
   // Verify ownership of the parent budget
@@ -123,7 +126,7 @@ export async function deleteExpense(expenseId) {
   const { email } = await getAuthenticatedUser();
   const numericExpenseId = Number(expenseId);
 
-  if (!numericExpenseId || isNaN(numericExpenseId)) {
+  if (!numericExpenseId || isNaN(numericExpenseId) || numericExpenseId <= 0) {
     throw new Error('Invalid expense ID');
   }
 
