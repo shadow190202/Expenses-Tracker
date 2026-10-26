@@ -4,7 +4,23 @@ import { db } from '@/utils/db';
 import { Budgets, Expenses } from '@/utils/schema';
 import { and, desc, eq } from 'drizzle-orm';
 import { getAuthenticatedUser } from '@/lib/auth';
-import moment from 'moment';
+
+function formatExpense(item) {
+  if (!item) return item;
+  let formattedDate = '';
+  if (item.createdAt instanceof Date) {
+    const day = String(item.createdAt.getDate()).padStart(2, '0');
+    const month = String(item.createdAt.getMonth() + 1).padStart(2, '0');
+    const year = item.createdAt.getFullYear();
+    formattedDate = `${day}-${month}-${year}`;
+  } else if (item.createdAt) {
+    formattedDate = String(item.createdAt);
+  }
+  return {
+    ...item,
+    createdAt: formattedDate,
+  };
+}
 
 /**
  * Fetch all expenses for a specific budget, strictly verifying budget ownership.
@@ -33,7 +49,7 @@ export async function getExpensesByBudgetId(budgetId) {
     .where(eq(Expenses.budgetId, numericBudgetId))
     .orderBy(desc(Expenses.id));
 
-  return result;
+  return result.map(formatExpense);
 }
 
 /**
@@ -55,7 +71,7 @@ export async function getAllExpenses() {
     .where(eq(Budgets.createdBy, email))
     .orderBy(desc(Expenses.id));
 
-  return result;
+  return result.map(formatExpense);
 }
 
 /**
@@ -93,7 +109,7 @@ export async function addExpense({ name, amount, budgetId }) {
       name: trimmedName,
       amount: String(parsedAmount),
       budgetId: numericBudgetId,
-      createdAt: moment().format('DD-MM-YYYY'),
+      createdAt: new Date(),
     })
     .returning({ insertedId: Expenses.id });
 
