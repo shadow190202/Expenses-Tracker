@@ -27,8 +27,8 @@ function Dashboard() {
         getBudgetsList(),
         getAllExpenses(),
       ]);
-      setBudgetList(budgets);
-      setExpensesList(expenses);
+      setBudgetList(budgets || []);
+      setExpensesList(expenses || []);
     } catch (error) {
       console.error("Failed to load dashboard data:", error);
       toast.error(error.message || "Failed to load dashboard data");
@@ -46,13 +46,20 @@ function Dashboard() {
           <ExpensesListTable 
             expensesList={expensesList}
             refreshData={() => loadDashboardData()}
+            emptyMessage="No expenses recorded yet."
           />
         </div>
         <div className='grid gap-5'>
           <h2 className='font-bold text-lg'>Latest Budgets</h2>
-          {budgetList.map((budget, index) => (
-            <BudgetItem budget={budget} key={budget.id || index} />
-          ))}
+          {budgetList.length > 0 ? (
+            budgetList.map((budget, index) => (
+              <BudgetItem budget={budget} key={budget.id || index} />
+            ))
+          ) : (
+            <div className="p-6 border rounded-lg text-center text-gray-400 text-sm bg-slate-50/50">
+              No budgets created yet.
+            </div>
+          )}
         </div>
       </div>
     </div>

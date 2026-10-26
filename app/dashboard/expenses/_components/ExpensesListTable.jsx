@@ -1,8 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { Trash, Loader2 } from "lucide-react";
+import { Trash, Loader2, ReceiptText } from "lucide-react";
 import { toast } from "sonner";
 import { deleteExpense as deleteExpenseAction } from "@/actions/expenses";
+import { formatCurrency, formatDate } from "@/lib/formatters";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,7 +16,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-function ExpensesListTable({ expensesList, refreshData }) {
+function ExpensesListTable({
+  expensesList,
+  refreshData,
+  emptyMessage = "No expenses logged for this budget yet. Add your first expense above!",
+}) {
   const [deletingId, setDeletingId] = useState(null);
 
   const handleDeleteExpense = async (expenseId) => {
@@ -48,8 +53,8 @@ function ExpensesListTable({ expensesList, refreshData }) {
             className="grid grid-cols-4 bg-slate-50 p-2 border-b border-slate-100 items-center text-sm"
           >
             <span className="font-medium text-gray-800">{expenses.name}</span>
-            <span>${Number(expenses.amount).toLocaleString()}</span>
-            <span className="text-gray-500">{expenses.createdAt}</span>
+            <span>{formatCurrency(expenses.amount)}</span>
+            <span className="text-gray-500">{formatDate(expenses.createdAt)}</span>
             <span>
               {deletingId === expenses.id ? (
                 <Loader2 className="h-4 w-4 animate-spin text-red-500" />
@@ -68,7 +73,7 @@ function ExpensesListTable({ expensesList, refreshData }) {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Delete Expense</AlertDialogTitle>
                       <AlertDialogDescription>
-                        Are you sure you want to delete &quot;{expenses.name}&quot; (${Number(expenses.amount).toLocaleString()})? This action cannot be undone.
+                        Are you sure you want to delete &quot;{expenses.name}&quot; ({formatCurrency(expenses.amount)})? This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -87,8 +92,11 @@ function ExpensesListTable({ expensesList, refreshData }) {
           </div>
         ))
       ) : (
-        <div className="p-4 text-center text-gray-500 bg-slate-50 border rounded-b-md text-sm">
-          No expenses recorded yet.
+        <div className="p-8 text-center bg-slate-50 border border-t-0 rounded-b-md flex flex-col items-center justify-center space-y-2">
+          <ReceiptText className="h-8 w-8 text-slate-300" />
+          <p className="text-gray-500 text-sm font-medium">
+            {emptyMessage}
+          </p>
         </div>
       )}
     </div>

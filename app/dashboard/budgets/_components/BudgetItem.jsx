@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { formatCurrency } from "@/lib/formatters";
 
 function BudgetItem({ budget }) {
   const calculateProgressPercent = () => {
@@ -15,7 +16,7 @@ function BudgetItem({ budget }) {
 
   return (
     <Link href={`/dashboard/expenses/${budget?.id}`}>
-      <div className="p-5 border rounded-lg h-[170px] hover:shadow-md cursor-pointer transition-shadow">
+      <div className="p-5 border rounded-lg h-[170px] hover:shadow-md cursor-pointer transition-shadow bg-white">
         <div className="flex gap-2 items-center justify-between">
           <div className="flex gap-2 items-center">
             <h2 className="text-2xl p-3 px-4 bg-slate-100 rounded-full">
@@ -29,18 +30,18 @@ function BudgetItem({ budget }) {
             </div>
           </div>
           <h2 className="font-bold text-primary text-lg">
-            ${amount.toLocaleString()}
+            {formatCurrency(amount)}
           </h2>
         </div>
         <div className="mt-5">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-xs text-slate-400">
-              ${totalSpend.toLocaleString()} Spent
+              {formatCurrency(totalSpend)} Spent
             </h2>
             <h2 className="text-xs text-slate-400">
               {remaining < 0
-                ? `-$${Math.abs(remaining).toLocaleString()} Over`
-                : `$${remaining.toLocaleString()} Remaining`}
+                ? `${formatCurrency(Math.abs(remaining))} Over`
+                : `${formatCurrency(remaining)} Remaining`}
             </h2>
           </div>
           <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">

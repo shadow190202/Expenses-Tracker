@@ -9,6 +9,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { formatCurrency, formatCompactNumber } from "@/lib/formatters";
 
 function BarChartDashboard({ budgetList }) {
   if (!budgetList || budgetList.length === 0) {
@@ -36,9 +37,9 @@ function BarChartDashboard({ budgetList }) {
           }}
         >
           <XAxis dataKey="name" />
-          <YAxis />
+          <YAxis tickFormatter={(value) => `$${formatCompactNumber(value)}`} />
           <Tooltip
-            formatter={(value, name) => [`$${Number(value).toLocaleString()}`, name]}
+            formatter={(value, name) => [formatCurrency(value), name]}
           />
           <Legend />
           <Bar

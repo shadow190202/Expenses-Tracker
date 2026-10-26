@@ -137,6 +137,7 @@ function ExpensesScreen({ id }) {
         <ExpensesListTable
           expensesList={expensesList}
           refreshData={() => getBudgetInfo()}
+          emptyMessage="No expenses logged for this budget yet. Add your first expense above!"
         />
       </div>
     </div>

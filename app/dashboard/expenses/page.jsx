@@ -44,6 +44,7 @@ export default function ExpensesPage() {
         <ExpensesListTable
           expensesList={expensesList}
           refreshData={loadAllExpenses}
+          emptyMessage="No expenses recorded yet. Create a budget and add your expenses!"
         />
       )}
     </div>

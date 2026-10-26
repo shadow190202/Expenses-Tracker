@@ -1,5 +1,6 @@
 import { PiggyBank, ReceiptText, Wallet } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { formatCurrency } from "@/lib/formatters";
 
 function CardInfo({ budgetList }) {
   const [totalBudget, setTotalBudget] = useState(0);
@@ -24,27 +25,35 @@ function CardInfo({ budgetList }) {
     setTotalSpend(totalSpend_);
   };
 
+  const remainingBudget = totalBudget - totalSpend;
+
   return (
     <div>
       <div className="mt-7 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <div className="p-7 border rounded-lg flex items-center justify-between shadow-sm">
+        <div className="p-7 border rounded-lg flex items-center justify-between shadow-sm bg-white">
           <div>
             <h2 className="text-sm text-gray-500">Total Budget</h2>
-            <h2 className="font-bold text-2xl">${totalBudget.toLocaleString()}</h2>
+            <h2 className="font-bold text-2xl">{formatCurrency(totalBudget)}</h2>
           </div>
           <PiggyBank className="bg-primary p-3 h-12 w-12 rounded-full text-white" />
         </div>
-        <div className="p-7 border rounded-lg flex items-center justify-between shadow-sm">
+        <div className="p-7 border rounded-lg flex items-center justify-between shadow-sm bg-white">
           <div>
             <h2 className="text-sm text-gray-500">Total Spend</h2>
-            <h2 className="font-bold text-2xl">${totalSpend.toLocaleString()}</h2>
+            <h2 className="font-bold text-2xl">{formatCurrency(totalSpend)}</h2>
           </div>
           <ReceiptText className="bg-primary p-3 h-12 w-12 rounded-full text-white" />
         </div>
-        <div className="p-7 border rounded-lg flex items-center justify-between shadow-sm">
+        <div className="p-7 border rounded-lg flex items-center justify-between shadow-sm bg-white">
           <div>
-            <h2 className="text-sm text-gray-500">Total Budgets</h2>
-            <h2 className="font-bold text-2xl">{budgetList?.length || 0}</h2>
+            <h2 className="text-sm text-gray-500">Remaining Budget</h2>
+            <h2
+              className={`font-bold text-2xl ${
+                remainingBudget < 0 ? "text-red-600" : ""
+              }`}
+            >
+              {formatCurrency(remainingBudget)}
+            </h2>
           </div>
           <Wallet className="bg-primary p-3 h-12 w-12 rounded-full text-white" />
         </div>

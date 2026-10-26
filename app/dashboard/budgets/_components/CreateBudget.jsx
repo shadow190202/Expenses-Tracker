@@ -16,7 +16,7 @@ import { createBudget } from "@/actions/budgets";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
 
-function CreateBudget({ refreshData }) {
+function CreateBudget({ refreshData, children }) {
   const [open, setOpen] = useState(false);
   const [emojiIcon, setEmojiIcon] = useState("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
@@ -59,10 +59,12 @@ function CreateBudget({ refreshData }) {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <div className="bg-slate-100 p-10 rounded-md items-center flex flex-col border-2 border-dashed cursor-pointer hover:shadow-md">
-            <h2 className="text-3xl">+</h2>
-            <h2>Create New Budget</h2>
-          </div>
+          {children || (
+            <div className="bg-slate-100 p-10 rounded-md items-center flex flex-col border-2 border-dashed cursor-pointer hover:shadow-md">
+              <h2 className="text-3xl">+</h2>
+              <h2>Create New Budget</h2>
+            </div>
+          )}
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
