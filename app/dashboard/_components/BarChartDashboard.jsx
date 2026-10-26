@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Bar,
@@ -10,25 +11,48 @@ import {
 } from "recharts";
 
 function BarChartDashboard({ budgetList }) {
+  if (!budgetList || budgetList.length === 0) {
+    return (
+      <div className="border rounded-lg p-5">
+        <h2 className="font-bold text-lg">Activity</h2>
+        <div className="h-[300px] flex items-center justify-center text-gray-400">
+          No budget activity to display yet.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="border rounded-lg p-5">
-      <h2 className="font-bold text-lg">Activity</h2>
-      <ResponsiveContainer width={'80%'} height={300}>
+      <h2 className="font-bold text-lg mb-2">Activity</h2>
+      <ResponsiveContainer width="100%" height={300}>
         <BarChart
           data={budgetList}
           margin={{
-            top: 7,
-            // right:5,
+            top: 10,
+            right: 10,
             left: -10,
-            // bottom:5
+            bottom: 0,
           }}
         >
           <XAxis dataKey="name" />
           <YAxis />
-          <Tooltip />
+          <Tooltip
+            formatter={(value, name) => [`$${Number(value).toLocaleString()}`, name]}
+          />
           <Legend />
-          <Bar dataKey="totalSpend" stackId="a" fill="#4845d2" />
-          <Bar dataKey="amount" stackId="a" fill="#C3C2FF" />
+          <Bar
+            dataKey="totalSpend"
+            name="Total Spend"
+            fill="#4845d2"
+            radius={[4, 4, 0, 0]}
+          />
+          <Bar
+            dataKey="amount"
+            name="Budget Amount"
+            fill="#C3C2FF"
+            radius={[4, 4, 0, 0]}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>
