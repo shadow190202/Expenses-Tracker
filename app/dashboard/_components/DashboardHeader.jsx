@@ -1,42 +1,34 @@
 "use client";
-import { UserButton } from '@clerk/nextjs';
-import React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { LayoutGrid, PiggyBank, ReceiptText, ShieldCheck } from 'lucide-react';
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { UserButton } from "@clerk/nextjs";
+import { PanelLeft } from "lucide-react";
 
-function DashboardHeader() {
-  const path = usePathname();
-
-  const menuList = [
-    { name: "Dashboard", icon: LayoutGrid, path: "/dashboard" },
-    { name: "Budgets", icon: PiggyBank, path: "/dashboard/budgets" },
-    { name: "Expenses", icon: ReceiptText, path: "/dashboard/expenses" },
-    { name: "Upgrades", icon: ShieldCheck, path: "/dashboard/upgrades" },
-  ];
-
+function DashboardHeader({ isOpen, onToggle }) {
   return (
-    <div className='p-4 shadow-sm border-b flex justify-between items-center bg-white sticky top-0 z-30'>
-      {/* Mobile Navigation Links */}
-      <div className="flex md:hidden gap-1 sm:gap-2">
-        {menuList.map((menu, i) => (
-          <Link
-            key={i}
-            href={menu.path}
-            className={`flex items-center gap-1 text-xs font-medium px-2 py-1.5 rounded-md ${
-              path === menu.path ? "bg-blue-100 text-primary font-semibold" : "text-gray-600 hover:bg-gray-100"
-            }`}
-          >
-            <menu.icon className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">{menu.name}</span>
-          </Link>
-        ))}
+    <header className="sticky top-0 z-40 bg-white border-b px-6 py-4 flex justify-between items-center shadow-xs">
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
+          className="p-2 -ml-2 rounded-lg text-gray-600 hover:text-primary hover:bg-slate-100 transition-colors cursor-pointer"
+        >
+          <PanelLeft className="h-5 w-5" />
+        </button>
+
+        {/* Mobile Branding (visible only on mobile viewports) */}
+        <Link href="/dashboard" className="flex items-center gap-2 md:hidden">
+          <Image src="/logo.svg" alt="Expense Tracker Logo" width={28} height={28} />
+          <span className="font-bold text-base text-primary">ExpenseTracker</span>
+        </Link>
       </div>
-      <div className="hidden md:block"></div>
-      <div>
-        <UserButton />
+
+      <div className="flex items-center gap-4">
+        <UserButton afterSignOutUrl="/" />
       </div>
-    </div>
+    </header>
   );
 }
 

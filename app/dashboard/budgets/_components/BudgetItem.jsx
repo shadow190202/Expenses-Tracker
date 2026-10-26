@@ -16,29 +16,37 @@ function BudgetItem({ budget }) {
 
   return (
     <Link href={`/dashboard/expenses/${budget?.id}`}>
-      <div className="p-5 border rounded-lg h-[170px] hover:shadow-md cursor-pointer transition-shadow bg-white">
-        <div className="flex gap-2 items-center justify-between">
-          <div className="flex gap-2 items-center">
-            <h2 className="text-2xl p-3 px-4 bg-slate-100 rounded-full">
-              {budget?.icon || "😀"}
-            </h2>
-            <div>
-              <h2 className="font-bold text-gray-800">{budget?.name}</h2>
-              <h2 className="text-sm text-gray-500">
-                {budget?.totalItems || 0} Items
+      <div className="p-5 border rounded-lg h-[170px] hover:shadow-md cursor-pointer transition-shadow bg-white flex flex-col justify-between">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="text-2xl p-3 bg-slate-100 rounded-full flex-shrink-0">
+              {budget?.icon || "💰"}
+            </div>
+            <div className="min-w-0">
+              <h2
+                className="font-bold text-base md:text-lg text-slate-800 truncate"
+                title={budget?.name}
+              >
+                {budget?.name}
+              </h2>
+              <h2 className="text-sm text-slate-500 font-medium">
+                {budget?.totalItem || budget?.totalItems || 0} Items
               </h2>
             </div>
           </div>
-          <h2 className="font-bold text-primary text-lg">
-            {formatCurrency(amount)}
-          </h2>
+          <div className="text-right flex-shrink-0">
+            <h2 className="font-bold text-primary text-base md:text-lg">
+              {formatCurrency(budget?.amount || amount)}
+            </h2>
+          </div>
         </div>
-        <div className="mt-5">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xs text-slate-400">
+
+        <div className="mt-4">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-xs text-slate-500 font-medium">
               {formatCurrency(totalSpend)} Spent
             </h2>
-            <h2 className="text-xs text-slate-400">
+            <h2 className="text-xs text-slate-500 font-medium">
               {remaining < 0
                 ? `${formatCurrency(Math.abs(remaining))} Over`
                 : `${formatCurrency(remaining)} Remaining`}

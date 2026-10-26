@@ -36,8 +36,8 @@ function Dashboard() {
   };
 
   return (
-    <div className='p-8'>
-      <h2 className='font-bold text-3xl '>Hi, {user?.fullName} ✌️</h2>
+    <div>
+      <h2 className='font-bold text-3xl'>Hi, {user?.fullName} ✌️</h2>
       <p className='text-gray-500'>Here's what happening with your money, Let's Manage your expenses</p>
       <CardInfo budgetList={budgetList} />
       <div className='grid grid-cols-1 md:grid-cols-3 mt-6 gap-5'>

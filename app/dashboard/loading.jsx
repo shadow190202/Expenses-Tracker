@@ -2,7 +2,7 @@ import React from "react";
 
 export default function DashboardLoading() {
   return (
-    <div className="p-8 space-y-6">
+    <div className="space-y-6">
       {/* Title Skeletons */}
       <div className="space-y-2">
         <div className="h-9 w-64 bg-slate-200 rounded-md animate-pulse"></div>

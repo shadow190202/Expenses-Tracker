@@ -122,8 +122,7 @@ npm start
 │   ├── dashboard/
 │   │   ├── _components/      # Analytics chart, metric cards, and navigation
 │   │   ├── budgets/          # Budget management & creation dialogs
-│   │   ├── expenses/         # Comprehensive expense logs & detail views
-│   │   └── upgrades/         # Tier plans and feature overview
+│   │   └── expenses/         # Comprehensive expense logs & detail views
 │   ├── layout.js             # Root layout with ClerkProvider & Toaster
 │   └── page.js               # Public marketing landing page
 ├── components/ui/            # Reusable accessible UI components (Radix)

@@ -32,7 +32,7 @@ export default function ExpensesPage() {
   };
 
   return (
-    <div className="p-8">
+    <div>
       <h1 className="font-bold text-3xl mb-2">All Expenses</h1>
       <p className="text-gray-500 mb-6">
         Track, review and manage all your spending in one place.

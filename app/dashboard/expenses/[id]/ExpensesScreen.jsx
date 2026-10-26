@@ -77,7 +77,7 @@ function ExpensesScreen({ id }) {
   };
 
   return (
-    <div className="p-10">
+    <div>
       <h2 className="text-2xl font-bold flex justify-between items-center">
         My Expenses
         <div className="flex gap-2 items-center">
