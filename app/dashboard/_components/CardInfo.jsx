@@ -29,33 +29,45 @@ function CardInfo({ budgetList }) {
 
   return (
     <div>
-      <div className="mt-7 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <div className="p-7 border rounded-lg flex items-center justify-between shadow-sm bg-white">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6">
+        <div className="p-6 border border-slate-100 rounded-2xl flex items-center justify-between shadow-xs bg-white min-h-[110px]">
           <div>
-            <h2 className="text-sm text-gray-500">Total Budget</h2>
-            <h2 className="font-bold text-2xl">{formatCurrency(totalBudget)}</h2>
+            <h2 className="text-sm font-medium text-slate-500">Total Budget</h2>
+            <h2 className="font-bold text-2xl text-slate-900 mt-1">
+              {formatCurrency(totalBudget)}
+            </h2>
           </div>
-          <PiggyBank className="bg-primary p-3 h-12 w-12 rounded-full text-white" />
-        </div>
-        <div className="p-7 border rounded-lg flex items-center justify-between shadow-sm bg-white">
-          <div>
-            <h2 className="text-sm text-gray-500">Total Spend</h2>
-            <h2 className="font-bold text-2xl">{formatCurrency(totalSpend)}</h2>
+          <div className="p-3 bg-primary text-white rounded-full flex items-center justify-center flex-shrink-0">
+            <PiggyBank className="h-6 w-6" />
           </div>
-          <ReceiptText className="bg-primary p-3 h-12 w-12 rounded-full text-white" />
         </div>
-        <div className="p-7 border rounded-lg flex items-center justify-between shadow-sm bg-white">
+
+        <div className="p-6 border border-slate-100 rounded-2xl flex items-center justify-between shadow-xs bg-white min-h-[110px]">
           <div>
-            <h2 className="text-sm text-gray-500">Remaining Budget</h2>
+            <h2 className="text-sm font-medium text-slate-500">Total Spend</h2>
+            <h2 className="font-bold text-2xl text-slate-900 mt-1">
+              {formatCurrency(totalSpend)}
+            </h2>
+          </div>
+          <div className="p-3 bg-primary text-white rounded-full flex items-center justify-center flex-shrink-0">
+            <ReceiptText className="h-6 w-6" />
+          </div>
+        </div>
+
+        <div className="p-6 border border-slate-100 rounded-2xl flex items-center justify-between shadow-xs bg-white min-h-[110px]">
+          <div>
+            <h2 className="text-sm font-medium text-slate-500">Remaining Budget</h2>
             <h2
-              className={`font-bold text-2xl ${
-                remainingBudget < 0 ? "text-red-600" : ""
+              className={`font-bold text-2xl mt-1 ${
+                remainingBudget < 0 ? "text-red-600" : "text-slate-900"
               }`}
             >
               {formatCurrency(remainingBudget)}
             </h2>
           </div>
-          <Wallet className="bg-primary p-3 h-12 w-12 rounded-full text-white" />
+          <div className="p-3 bg-primary text-white rounded-full flex items-center justify-center flex-shrink-0">
+            <Wallet className="h-6 w-6" />
+          </div>
         </div>
       </div>
     </div>

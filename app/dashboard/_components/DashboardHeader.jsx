@@ -13,7 +13,7 @@ function DashboardHeader({ isOpen, onToggle }) {
           type="button"
           onClick={onToggle}
           aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
-          className="p-2 -ml-2 rounded-lg text-gray-600 hover:text-primary hover:bg-slate-100 transition-colors cursor-pointer"
+          className="p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
         >
           <PanelLeft className="h-5 w-5" />
         </button>

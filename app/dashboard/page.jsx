@@ -40,8 +40,8 @@ function Dashboard() {
       <h2 className='font-bold text-3xl'>Hi, {user?.fullName} ✌️</h2>
       <p className='text-gray-500'>Here's what happening with your money, Let's Manage your expenses</p>
       <CardInfo budgetList={budgetList} />
-      <div className='grid grid-cols-1 md:grid-cols-3 mt-6 gap-5'>
-        <div className='md:col-span-2'>
+      <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6'>
+        <div className='lg:col-span-2 space-y-6'>
           <BarChartDashboard budgetList={budgetList} />
           <ExpensesListTable 
             expensesList={expensesList}
@@ -49,7 +49,7 @@ function Dashboard() {
             emptyMessage="No expenses recorded yet."
           />
         </div>
-        <div className='grid gap-5'>
+        <div className='lg:col-span-1 space-y-4'>
           <h2 className='font-bold text-lg'>Latest Budgets</h2>
           {budgetList.length > 0 ? (
             budgetList.map((budget, index) => (
