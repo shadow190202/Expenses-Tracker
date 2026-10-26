@@ -21,8 +21,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Expenses Tracker",
-  description: "Created by Sheryansh Sahu",
+  title: "Expense Tracker",
+  description: "Full-Stack Application for expense tracking by Shreyansh Sahu",
 };
 
 export default function RootLayout({ children }) {

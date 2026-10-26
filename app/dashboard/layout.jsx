@@ -1,29 +1,29 @@
-"use client"
+"use client";
 import React, { useEffect } from "react";
 import SideNav from "./_components/SideNav";
 import DashboardHeader from "./_components/DashboardHeader";
-import { db } from "@/utils/db";
-import { Budgets } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
-import { eq } from "drizzle-orm";
 import { useRouter } from "next/navigation";
-
+import { hasUserBudgets } from "@/actions/budgets";
 
 function Dashboardlayout({ children }) {
-
-  const {user} = useUser();
+  const { user } = useUser();
   const router = useRouter();
 
-  useEffect(()=>{
-    user&&checkUserBudgets();
-  },[user]);
-  const checkUserBudgets=async ()=>{
-    const result =await db.select()
-    .from(Budgets)
-    .where(eq(Budgets.createdBy,user?.primaryEmailAddress?.emailAddress));
+  useEffect(() => {
+    if (user) {
+      checkUserBudgets();
+    }
+  }, [user]);
 
-    if(result.length===0){
-      router.replace('/dashboard/budgets');
+  const checkUserBudgets = async () => {
+    try {
+      const hasBudgets = await hasUserBudgets();
+      if (!hasBudgets) {
+        router.replace('/dashboard/budgets');
+      }
+    } catch (error) {
+      console.error("Error checking user budgets:", error);
     }
   };
 

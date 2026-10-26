@@ -2,10 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { db } from "@/utils/db";
-import { Budgets, Expenses } from "@/utils/schema";
-import { desc, eq } from "drizzle-orm";
 import ExpensesListTable from "./_components/ExpensesListTable";
+import { getAllExpenses } from "@/actions/expenses";
+import { toast } from "sonner";
 
 export default function ExpensesPage() {
   const { user } = useUser();
@@ -14,29 +13,22 @@ export default function ExpensesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    user && getAllExpenses();
+    if (user) {
+      loadAllExpenses();
+    }
   }, [user]);
 
-  /**
-   * Fetch all expenses that belong to the logged-in user
-   */
-  const getAllExpenses = async () => {
-    setLoading(true);
-    const result = await db
-      .select({
-        id: Expenses.id,
-        name: Expenses.name,
-        amount: Expenses.amount,
-        createdAt: Expenses.createdAt,
-        budgetId: Expenses.budgetId,
-      })
-      .from(Budgets)
-      .rightJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
-      .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
-      .orderBy(desc(Expenses.id));
-
-    setExpensesList(result);
-    setLoading(false);
+  const loadAllExpenses = async () => {
+    try {
+      setLoading(true);
+      const result = await getAllExpenses();
+      setExpensesList(result || []);
+    } catch (error) {
+      console.error("Error loading expenses:", error);
+      toast.error(error.message || "Failed to load expenses");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,7 +43,7 @@ export default function ExpensesPage() {
       ) : (
         <ExpensesListTable
           expensesList={expensesList}
-          refreshData={getAllExpenses}
+          refreshData={loadAllExpenses}
         />
       )}
     </div>

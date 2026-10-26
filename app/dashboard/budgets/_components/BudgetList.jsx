@@ -1,55 +1,51 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import CreateBudget from "./CreateBudget";
-import { db } from "@/utils/db";
-import { getTableColumns, sql, eq, desc } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
-import { Budgets, Expenses } from "@/utils/schema";
 import BudgetItem from "./BudgetItem";
+import { getBudgetsList } from "@/actions/budgets";
+import { toast } from "sonner";
 
 function BudgetList() {
-
   const [budgetList, setBudgetList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { user } = useUser();
 
   useEffect(() => {
-    user && getBudgetList();
+    if (user) {
+      loadBudgets();
+    }
   }, [user]);
 
-  /**
-   * To Get Budget List
-   */
-  const getBudgetList = async () => {
-    const result = await db
-      .select({
-        ...getTableColumns(Budgets),
-        totalSpend: sql`sum(${Expenses.amount})`.mapWith(Number),
-        totalItems: sql`count(${Expenses.id})`.mapWith(Number),
-      })
-      .from(Budgets)
-      .leftJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
-      .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
-      .groupBy(Budgets.id)
-      .orderBy(desc(Budgets.id));
-
-      setBudgetList(result);
-    
+  const loadBudgets = async () => {
+    try {
+      setLoading(true);
+      const result = await getBudgetsList();
+      setBudgetList(result || []);
+    } catch (error) {
+      console.error("Error loading budgets:", error);
+      toast.error(error.message || "Failed to load budgets");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="mt-7">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <CreateBudget refreshData={() => getBudgetList()} />
-        {budgetList?.length > 0
-          ? budgetList.map((budget, index) => (
-              <BudgetItem budget={budget} key={index} />
-            ))
-          : [1, 2, 3, 4, 5].map((item, index) => (
-              <div
-                key={index}
-                className="w-full bg-slate-200 rounded-lg h-[140px] animate-pulse"
-              ></div>
-            ))}
+        <CreateBudget refreshData={loadBudgets} />
+        {loading ? (
+          [1, 2, 3, 4, 5].map((item, index) => (
+            <div
+              key={index}
+              className="w-full bg-slate-200 rounded-lg h-[140px] animate-pulse"
+            ></div>
+          ))
+        ) : budgetList.length > 0 ? (
+          budgetList.map((budget, index) => (
+            <BudgetItem budget={budget} key={budget.id || index} />
+          ))
+        ) : null}
       </div>
     </div>
   );

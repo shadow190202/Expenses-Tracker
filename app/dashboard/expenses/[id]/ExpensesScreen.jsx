@@ -1,12 +1,10 @@
 "use client";
-import { db } from "@/utils/db";
-import { Budgets, Expenses } from "@/utils/schema";
 import React, { useEffect, useState } from "react";
-import { getTableColumns, sql, eq, desc } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
 import BudgetItem from "../../budgets/_components/BudgetItem";
 import AddExpenses from "../_components/AddExpenses";
 import ExpensesListTable from "../_components/ExpensesListTable";
+import EditBudget from "../_components/EditBudget";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,10 +17,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { PenBox, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import EditBudget from "../_components/EditBudget";
+import { getBudgetById, deleteBudget as deleteBudgetAction } from "@/actions/budgets";
+import { getExpensesByBudgetId } from "@/actions/expenses";
 
 function ExpensesScreen({ id }) {
   const { user } = useUser();
@@ -31,60 +30,47 @@ function ExpensesScreen({ id }) {
   const route = useRouter();
 
   useEffect(() => {
-    user && getBudgetInfo();
-  }, [user]);
-
-  /**
-   * To Get Budget
-   */
+    if (user && id) {
+      getBudgetInfo();
+    }
+  }, [user, id]);
 
   const getBudgetInfo = async () => {
-    const result = await db
-      .select({
-        ...getTableColumns(Budgets),
-        totalSpend: sql`sum(${Expenses.amount})`.mapWith(Number),
-        totalItems: sql`count(${Expenses.id})`.mapWith(Number),
-      })
-      .from(Budgets)
-      .leftJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
-      .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
-      .where(eq(Budgets.id, id))
-      .groupBy(Budgets.id);
-
-    setbudgetInfo(result[0]);
-    getExpensesList();
+    try {
+      const budget = await getBudgetById(id);
+      if (!budget) {
+        toast.error("Budget not found or unauthorized");
+        route.replace("/dashboard/budgets");
+        return;
+      }
+      setbudgetInfo(budget);
+      await getExpensesList();
+    } catch (error) {
+      console.error("Failed to load budget:", error);
+      toast.error(error.message || "Failed to load budget");
+      route.replace("/dashboard/budgets");
+    }
   };
-
-  /**
-   * Get Latest Expenses
-   */
 
   const getExpensesList = async () => {
-    const result = await db
-      .select()
-      .from(Expenses)
-      .where(eq(Expenses.budgetId, id))
-      .orderBy(desc(Expenses.id));
-    setExpensesList(result);
+    try {
+      const list = await getExpensesByBudgetId(id);
+      setExpensesList(list || []);
+    } catch (error) {
+      console.error("Failed to load expenses:", error);
+      toast.error(error.message || "Failed to load expenses");
+    }
   };
 
-  /**
-   * Get Delete Budget
-   */
-  const deleteBudget = async () => {
-    const deleteExpenseResult = await db
-      .delete(Expenses)
-      .where(eq(Expenses.budgetId, id))
-      .returning();
-
-    if (deleteExpenseResult) {
-      const result = await db
-        .delete(Budgets)
-        .where(eq(Budgets.id, id))
-        .returning();
+  const handleDeleteBudget = async () => {
+    try {
+      await deleteBudgetAction(id);
+      toast.success("Budget Deleted!");
+      route.replace("/dashboard/budgets");
+    } catch (error) {
+      console.error("Failed to delete budget:", error);
+      toast.error(error.message || "Failed to delete budget");
     }
-    toast("Budget Deleted!");
-    route.replace("/dashboard/budgets");
   };
 
   return (
@@ -92,13 +78,13 @@ function ExpensesScreen({ id }) {
       <h2 className="text-2xl font-bold flex justify-between items-center">
         My Expenses
         <div className="flex gap-2 items-center">
-          {/* <EditBudget budgetInfo={budgetInfo} /> */}
           {budgetInfo ? (
-            <EditBudget budgetInfo={budgetInfo}
-            refreshData={()=>getBudgetInfo()}
+            <EditBudget
+              budgetInfo={budgetInfo}
+              refreshData={() => getBudgetInfo()}
             />
           ) : (
-            <div className="bg-slate-200 rounded-lg animate-pulse"></div>
+            <div className="bg-slate-200 rounded-lg animate-pulse h-10 w-24"></div>
           )}
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -118,7 +104,7 @@ function ExpensesScreen({ id }) {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => deleteBudget()}>
+                <AlertDialogAction onClick={() => handleDeleteBudget()}>
                   Continue
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -139,7 +125,6 @@ function ExpensesScreen({ id }) {
         />
       </div>
       <div className="mt-4">
-        
         <ExpensesListTable
           expensesList={expensesList}
           refreshData={() => getBudgetInfo()}
